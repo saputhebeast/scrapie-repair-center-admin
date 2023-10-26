@@ -19,7 +19,6 @@ const SignUp = () => {
     const [name, setName] = useState({ value: "", error: "" });
     const [email, setEmail] = useState({ value: "", error: "" });
     const [password, setPassword] = useState({ value: "", error: "" });
-    // const [location, setLocation] = useState({ value: "", error: "" });
     const [description, setDescription] = useState({ value: "", error: "" });
     const [contact, setContact] = useState({ value: "", error: "" });
 
@@ -66,7 +65,8 @@ const SignUp = () => {
                             longitude: 89.32,
                             visits: 0,
                             completedOrderCount: 0,
-                            isBoosted: false
+                            isBoosted: false,
+                            image: "https://media.istockphoto.com/id/1157179147/photo/checking-oil-in-car-engine.jpg?s=612x612&w=0&k=20&c=UlpxPn7pkghIG3FC7ldhwtFIBwEf6eJOfiUTM_nn8JI=",
                         };
 
                         addDoc(collection(db, 'repair-centers'), data)
@@ -128,14 +128,6 @@ const SignUp = () => {
                     errorText={password.error}
                     secureTextEntry
                 />
-                {/* <TextInput
-                    label="Location"
-                    returnKeyType="next"
-                    value={location.value}
-                    onChangeText={(text) => setLocation({ value: text, error: "" })}
-                    error={!!location.error}
-                    errorText={location.error}
-                /> */}
                 <TextInput
                     label="Description"
                     returnKeyType="next"

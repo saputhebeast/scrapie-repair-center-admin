@@ -15,7 +15,7 @@ const Welcome = () => {
     <View>
       <View style={styles.container}>
         <Text style={styles.welcomeText(COLORS.black, SIZES.xSmall)}>
-          {data.name ? `Good Morning, ${data.name}!` : "Good Morning!"}
+          {data.name ? `Good Morning, ${data.name.charAt(0).toUpperCase() + data.name.slice(1)}!` : "Good Morning!"}
         </Text>
       </View>
     </View>
