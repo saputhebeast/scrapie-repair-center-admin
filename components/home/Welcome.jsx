@@ -1,14 +1,21 @@
 import { View, Text } from "react-native";
-import React  from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./welcome.style";
 import { COLORS, SIZES } from "../../constants";
+import getUserData from "../../service/getUser";
 
 const Welcome = () => {
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    getUserData(setData);
+  }, []);
+
   return (
     <View>
       <View style={styles.container}>
         <Text style={styles.welcomeText(COLORS.black, SIZES.xSmall)}>
-          Good Morning!
+          {data.name ? `Good Morning, ${data.name}!` : "Good Morning!"}
         </Text>
       </View>
     </View>

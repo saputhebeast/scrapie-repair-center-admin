@@ -1,23 +1,36 @@
-import { db } from "../../firebase.config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDocs, collection, query, where } from "firebase/firestore";
+import { db } from "../firebase.config";
 
-const getUser = async () => {
-    const userID = "qPffAhYz8flGU91qYvCX";
-    try {
-        const usersCollection = collection(db, "users");
-        const userQuery = query(usersCollection, where("userId", "==", userID));
-        const querySnapshot = await getDocs(userQuery);
+const getUserData = async (data) => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userEmail = user.email;
 
-        if (querySnapshot.docs.length === 0) {
-            console.log("User not found");
-            return null;
+            const usersCollection = collection(db, "users");
+            const userQuery = query(
+                usersCollection,
+                where("email", "==", userEmail)
+            );
+
+            getDocs(userQuery)
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userDoc = querySnapshot.docs[0];
+                        const userData = userDoc.data();
+                        const userId = userDoc.id;
+                        const userDataWithId = { ...userData, id: userId };
+                        data(userDataWithId)
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching user data:", error);
+                });
+
+                return null;
         }
-
-        const userData = querySnapshot.docs[0].data();
-        return userData;
-    } catch (error) {
-        console.error("Error getting user from Fire store: ", error);
-        return null;
-    }
+    });
 };
 
-export default getUser;
+export default getUserData;
