@@ -1,53 +1,181 @@
 import React, { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../Button";
+import TextInput from "../TextInputLogin";
+import { nameValidator } from '../../helpers/nameValidator';
+import { emailValidator } from "../../helpers/emailValidator";
+import { descriptionValidator } from "../../helpers/descriptionValidator";
+import { passwordValidator } from "../../helpers/passwordValidator";
+import { phoneValidator } from "../../helpers/phoneValidator";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from '../../firebase.config'
+import { collection, addDoc } from "firebase/firestore";
 
-const SignUp = ({ switchView }) => {
+const SignUp = () => {
     const navigation = useNavigation();
+    const auth = getAuth();
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [address, setAddress] = useState("");
-    const [telephone, setTelephone] = useState("");
+    const [name, setName] = useState({ value: "", error: "" });
+    const [email, setEmail] = useState({ value: "", error: "" });
+    const [password, setPassword] = useState({ value: "", error: "" });
+    // const [location, setLocation] = useState({ value: "", error: "" });
+    const [description, setDescription] = useState({ value: "", error: "" });
+    const [contact, setContact] = useState({ value: "", error: "" });
 
     const handleSignUpButton = () => {
-        navigation.navigate("BottomNavigation");
+        const nameError = nameValidator(name.value);
+        const emailError = emailValidator(email.value);
+        const passwordError = passwordValidator(password.value);
+        const descriptionError = descriptionValidator(description.value)
+        const contactError = phoneValidator(contact.value);
+        if (nameError || emailError || passwordError || descriptionError || contactError) {
+            setName({ ...name, error: nameError })
+            setEmail({ ...email, error: emailError })
+            setPassword({ ...password, error: passwordError })
+            setDescription({ ...description, error: descriptionError })
+            setContact({ ...contact, error: contactError })
+            return;
+        }
+
+        createUserWithEmailAndPassword(auth, email.value, password.value)
+            .then((userCredential) => {
+
+                const user = userCredential.user;
+
+                const userData = {
+                    name: name.value,
+                    email: email.value,
+                    phone: contact.value,
+                };
+
+                addDoc(collection(db, "users"), userData)
+                    .then((docRef) => {
+                        const userId = docRef.id;
+                        console.log("User data added to Fire store");
+
+                        const data = {
+                            userId: userId,
+                            email: email.value,
+                            name: name.value,
+                            description: description.value,
+                            contact: contact.value,
+                            openFrom: new Date().setHours(8, 0, 0),
+                            openTo: new Date().setHours(18, 0, 0),
+                            latitude: 93.45,
+                            longitude: 89.32,
+                            visits: 0,
+                            completedOrderCount: 0,
+                            isBoosted: false
+                        };
+
+                        addDoc(collection(db, 'repair-centers'), data)
+                        .then(() => {
+                            console.log("User data added to Fire store");
+                        })
+                    })
+                    .catch((error) => {
+                        console.error("Error adding user data to Fire store: ", error);
+                    });
+
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "BottomNavigation" }],
+                });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error("Error signing up: ", errorCode, errorMessage);
+            });
     }
 
     return (
         <View>
-            <Text>Signup Page</Text>
-            <TextInput
-                placeholder="Username"
-                value={username}
-                onChangeText={(text) => setUsername(text)}
-            />
-            <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
-            />
-            <TextInput
-                placeholder="Address"
-                value={address}
-                onChangeText={(text) => setAddress(text)}
-            />
-            <TextInput
-                placeholder="Telephone"
-                value={telephone}
-                onChangeText={(text) => setTelephone(text)}
-            />
-            <Button text="Sign Up" onPress={handleSignUpButton} />
+            <Text style={styles.header}>Sign Up</Text>
+            <View
+                style={{
+                    margin: 20,
+                    paddingTop: 40,
+                }}
+            >
+                <TextInput
+                    label="Company Name"
+                    returnKeyType="next"
+                    value={name.value}
+                    onChangeText={(text) => setName({ value: text, error: "" })}
+                    error={!!name.error}
+                    errorText={name.error}
+                />
+                <TextInput
+                    label="Email"
+                    returnKeyType="next"
+                    value={email.value}
+                    onChangeText={(text) => setEmail({ value: text, error: "" })}
+                    error={!!email.error}
+                    errorText={email.error}
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                />
+                <TextInput
+                    label="Password"
+                    returnKeyType="next"
+                    value={password.value}
+                    onChangeText={(text) => setPassword({ value: text, error: "" })}
+                    error={!!password.error}
+                    errorText={password.error}
+                    secureTextEntry
+                />
+                {/* <TextInput
+                    label="Location"
+                    returnKeyType="next"
+                    value={location.value}
+                    onChangeText={(text) => setLocation({ value: text, error: "" })}
+                    error={!!location.error}
+                    errorText={location.error}
+                /> */}
+                <TextInput
+                    label="Description"
+                    returnKeyType="next"
+                    value={description.value}
+                    onChangeText={(text) => setDescription({ value: text, error: "" })}
+                    error={!!description.error}
+                    errorText={description.error}
+                />
+                <TextInput
+                    label="Contact"
+                    returnKeyType="next"
+                    value={contact.value}
+                    onChangeText={(text) => setContact({ value: text, error: "" })}
+                    error={!!contact.error}
+                    errorText={contact.error}
+                />
+                <Button text="Sign Up" onPress={handleSignUpButton} />
+            </View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    header: {
+        marginTop: 100,
+        fontSize: 40,
+        marginLeft: 20,
+    },
+    container: {
+        marginTop: 80,
+    },
+    input: {
+        height: 40,
+        marginLeft: 20,
+        marginRight: 20,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 6,
+        borderColor: "gray"
+    }
+});
 
 export default SignUp;

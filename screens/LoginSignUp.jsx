@@ -12,10 +12,9 @@ const LoginSignUp = () => {
 
     return (
         <View>
-            <Text>hello world from the sign-up page</Text>
             {isLoginVisible ? <Login /> : <SignUp />}
             <TouchableWithoutFeedback onPress={toggleView}>
-                <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+                <Text style={{ color: "blue", textDecorationLine: "underline", textAlign: "center" }}>
                     {isLoginVisible ? "I don't have an account" : "I've an account"}
                 </Text>
             </TouchableWithoutFeedback>
