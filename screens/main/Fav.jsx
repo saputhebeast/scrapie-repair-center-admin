@@ -5,7 +5,6 @@ import CompletedRequestedView from '../../components/CompletedRequestView'
 const Fav = () => {
   return (
     <View>
-      <Text>Completed Requests</Text>
       <CompletedRequestedView/>
     </View>
   )

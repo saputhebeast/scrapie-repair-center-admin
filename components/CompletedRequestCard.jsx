@@ -10,7 +10,8 @@ const CompletedRequestCard = ({ imageSource, name, address, phoneNumber, budget,
             </View>
             <View style={styles.rightSide}>
                 <Text style={styles.name}>{name}</Text>
-                <Text style={styles.details}>Location: {address}</Text>
+                <Text style={styles.details}>Email: {address}</Text>
+                <Text style={styles.details}>Contact: {phoneNumber}</Text>
                 <Text style={styles.details}>Budget: {budget}</Text>
                 <Text style={styles.details}>Requested At: {requestedAt}</Text>
             </View>

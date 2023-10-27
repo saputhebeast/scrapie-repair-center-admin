@@ -1,15 +1,13 @@
 import React from "react";
-import { ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PendingRequestCard from "../../components/PendingRequestCard";
 import PendingRequestView from "../../components/PendingRequestView";
+import { View } from "react-native-animatable";
 
 const Search = () => {
   return (
-    <SafeAreaView>
-      <Text>Pending Request</Text>
+    <View>
       <PendingRequestView/>
-    </SafeAreaView>
+    </View>
   );
 };
 

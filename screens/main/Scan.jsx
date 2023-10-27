@@ -8,7 +8,6 @@ import OnGoingRequestView from "../../components/OnGoingRequestView";
 const Scan = ({}) => {
     return (
       <View>
-        <Text>On-going Request</Text>
         <OnGoingRequestView/>
       </View>
     );
