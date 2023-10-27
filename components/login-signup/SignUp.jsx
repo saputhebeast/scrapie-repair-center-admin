@@ -67,6 +67,7 @@ const SignUp = () => {
                             completedOrderCount: 0,
                             isBoosted: false,
                             image: "https://media.istockphoto.com/id/1157179147/photo/checking-oil-in-car-engine.jpg?s=612x612&w=0&k=20&c=UlpxPn7pkghIG3FC7ldhwtFIBwEf6eJOfiUTM_nn8JI=",
+                            isPopular: false,
                         };
 
                         addDoc(collection(db, 'repair-centers'), data)
