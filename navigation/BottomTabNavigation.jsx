@@ -47,7 +47,7 @@ const BottomTabNavigation = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <Ionicons
-                name={"search-sharp"}
+                name={"download-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />
@@ -62,8 +62,8 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <Entypo
-                name="camera"
+              <Ionicons
+                name={"arrow-forward-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />
@@ -77,9 +77,8 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-
-              <Feather
-                name={"heart"}
+              <Ionicons
+                name={"checkmark-done-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />

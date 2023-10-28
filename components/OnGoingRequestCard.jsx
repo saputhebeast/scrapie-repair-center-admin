@@ -3,8 +3,9 @@ import { View, Image, Text, StyleSheet, TouchableOpacity, Alert } from 'react-na
 import { COLORS } from '../constants';
 import { db } from '../firebase.config';
 import { collection, doc, setDoc } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 
-const updateRequest = async (id, status) => {
+const updateRequest = async (id, status, navigation) => {
     const docRef = doc(db, 'repair-center-request', id);
     try {
         await setDoc(docRef, { status: status, deliveryAt: new Date().toISOString() }, { merge: true });
@@ -12,9 +13,12 @@ const updateRequest = async (id, status) => {
     } catch (error) {
         console.error("Error updating request:", error);
     }
+    navigation.navigate('Home')
 }
 
 const OnGoingRequestCard = ({ id, imageSource, name, address, phoneNumber, budget, requestedAt }) => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.card}>
             <View style={styles.leftSide}>
@@ -38,7 +42,7 @@ const OnGoingRequestCard = ({ id, imageSource, name, address, phoneNumber, budge
                                     {
                                         text: "Yes",
                                         onPress: async () => {
-                                            await updateRequest(id, 'completed');
+                                            await updateRequest(id, 'completed', navigation);
                                         },
                                     },
                                 ]

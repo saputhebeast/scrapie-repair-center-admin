@@ -6,7 +6,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
 const updateRequest = async (id, status) => {
     const docRef = doc(db, 'repair-center-request', id);
-    try {
+    try { 
         await setDoc(docRef, { status }, { merge: true });
         console.log("Request updated successfully");
     } catch (error) {
